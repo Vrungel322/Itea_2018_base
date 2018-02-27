@@ -7,5 +7,10 @@
     tools:context="com.example.vrungel.itea_2018_base.MainActivity"
     >
 
-
+  <Button
+      android:id="@+id/tvNewActivity"
+      android:text="Next"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      />
 </LinearLayout>
