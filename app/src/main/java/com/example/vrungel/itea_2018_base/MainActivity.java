@@ -1,37 +1,66 @@
 package com.example.vrungel.itea_2018_base;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import butterknife.BindView;
 import com.example.vrungel.itea_2018_base.base.BaseActivity;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
-  @BindView(R.id.lv) ListView mListView;
+  @BindView(R.id.rv) RecyclerView mRecyclerView;
   private List<Country> mCountries = new ArrayList<>();
 
   private CustomAdapter mAdapter;
+  private CustomRVAdapter mCustomRVAdapter;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_main);
     super.onCreate(savedInstanceState);
+    mCustomRVAdapter = new CustomRVAdapter();
+    mRecyclerView.setLayoutManager(
+        new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+    //mRecyclerView.setLayoutManager(
+    //    new GridLayoutManager(getApplicationContext(),3));
+    mRecyclerView.setAdapter(mCustomRVAdapter);
 
-   mCountries = mDataManager.fetchMocks();
-    mAdapter = new CustomAdapter(getApplicationContext(), R.layout.item_layout_custom, mCountries);
-    mListView.setAdapter(mAdapter);
-    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri uri = Uri.parse("https://ru.wikipedia.org/wiki/" + mAdapter.getCountries().get(i));
-        intent.setData(uri);
-        startActivity(intent);
-      }
-    });
+    mCustomRVAdapter.setCountries(mDataManager.fetchMocks());
+
+    //mCountries = mDataManager.fetchMocks();
+    //mAdapter = new CustomAdapter(getApplicationContext(), R.layout.item_layout_custom, mCountries);
+    //mListView.setAdapter(mAdapter);
+    //mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    //  @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    //    //Intent intent = new Intent(Intent.ACTION_VIEW);
+    //    //Uri uri = Uri.parse("https://ru.wikipedia.org/wiki/" + mAdapter.getCountries().get(i));
+    //    //intent.setData(uri);
+    //    //startActivity(intent);
+    //
+    //    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+    //    builder.setTitle("Title")
+    //        .setIcon(R.drawable.ic_launcher_background)
+    //        .setMessage("Body of test Alert Dialog. Close dialog?")
+    //        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+    //          @Override public void onClick(DialogInterface dialogInterface, int i) {
+    //            Toast.makeText(MainActivity.this, "Positive Btn", Toast.LENGTH_SHORT).show();
+    //          }
+    //        })
+    //        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+    //          @Override public void onClick(DialogInterface dialogInterface, int i) {
+    //            Toast.makeText(MainActivity.this, "Negative Btn", Toast.LENGTH_SHORT).show();
+    //          }
+    //        })
+    //        .setNeutralButton("Not now", new DialogInterface.OnClickListener() {
+    //          @Override public void onClick(DialogInterface dialogInterface, int i) {
+    //            Toast.makeText(MainActivity.this, "Neutral Btn", Toast.LENGTH_SHORT).show();
+    //          }
+    //        })
+    //        .setCancelable(false)
+    //        .create()
+    //        .show();
+    //  }
+    //});
 
     //EditText t=new EditText();
     //t.addTextChangedListener(new TextWatcher() {
