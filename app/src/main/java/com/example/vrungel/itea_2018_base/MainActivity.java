@@ -1,8 +1,10 @@
 package com.example.vrungel.itea_2018_base;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 import butterknife.BindView;
 import com.example.vrungel.itea_2018_base.base.BaseActivity;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity {
   @BindView(R.id.rv) RecyclerView mRecyclerView;
+  @BindView(R.id.srl) SwipeRefreshLayout mSwipeRefreshLayout;
   private List<Country> mCountries = new ArrayList<>();
 
   private CustomAdapter mAdapter;
@@ -26,6 +29,13 @@ public class MainActivity extends BaseActivity {
     mRecyclerView.setAdapter(mCustomRVAdapter);
 
     mCustomRVAdapter.setCountries(mDataManager.fetchMocks());
+
+    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+      @Override public void onRefresh() {
+        Toast.makeText(MainActivity.this, "onRefresh", Toast.LENGTH_SHORT).show();
+        mSwipeRefreshLayout.setRefreshing(false);
+      }
+    });
 
     //mCountries = mDataManager.fetchMocks();
     //mAdapter = new CustomAdapter(getApplicationContext(), R.layout.item_layout_custom, mCountries);
