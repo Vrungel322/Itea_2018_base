@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 import butterknife.BindView;
 import com.example.vrungel.itea_2018_base.base.BaseActivity;
+import com.example.vrungel.itea_2018_base.utils.ItemClickSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,13 @@ public class MainActivity extends BaseActivity {
         mSwipeRefreshLayout.setRefreshing(false);
       }
     });
+
+    ItemClickSupport.addTo(mRecyclerView)
+        .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+          @Override public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+            Toast.makeText(MainActivity.this, "onItemClicked " + position, Toast.LENGTH_SHORT).show();
+          }
+        }).setOnItemClickListener();
 
     //mCountries = mDataManager.fetchMocks();
     //mAdapter = new CustomAdapter(getApplicationContext(), R.layout.item_layout_custom, mCountries);
