@@ -1,5 +1,6 @@
 package com.example.vrungel.itea_2018_base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
+  private static final String APP_PREFERENCES = "APP_PREFERENCES";
   @BindView(R.id.rv) RecyclerView mRecyclerView;
   @BindView(R.id.srl) SwipeRefreshLayout mSwipeRefreshLayout;
   private List<Country> mCountries = new ArrayList<>();
@@ -42,9 +44,14 @@ public class MainActivity extends BaseActivity {
     ItemClickSupport.addTo(mRecyclerView)
         .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
           @Override public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-            Toast.makeText(MainActivity.this, "onItemClicked " + position, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "onItemClicked " + position, Toast.LENGTH_SHORT)
+                .show();
           }
-        }).setOnItemClickListener();
+        });
+
+    getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE).edit()
+        .putString("t", "temp")
+        .apply();
 
     //mCountries = mDataManager.fetchMocks();
     //mAdapter = new CustomAdapter(getApplicationContext(), R.layout.item_layout_custom, mCountries);
