@@ -2,6 +2,7 @@ package com.example.vrungel.itea_2018_base;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,10 +47,18 @@ public class MainActivity extends BaseActivity {
           @Override public void onItemClicked(RecyclerView recyclerView, int position, View v) {
             Toast.makeText(MainActivity.this, "onItemClicked " + position, Toast.LENGTH_SHORT)
                 .show();
+
+
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            TestDialogFragment.newInstance(null).show(ft, "TestDialogFragment");
           }
         });
 
     getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE).edit()
+        .putString("t", "temp")
+        .apply();
+
+    getPreferences(Context.MODE_PRIVATE).edit()
         .putString("t", "temp")
         .apply();
 
