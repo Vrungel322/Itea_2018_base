@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import butterknife.ButterKnife;
 
 /**
@@ -15,6 +16,8 @@ import butterknife.ButterKnife;
  */
 
 public class TestDialogFragment extends DialogFragment {
+
+  private CustomListener listener;
 
   public TestDialogFragment() {
     // Required empty public constructor
@@ -42,7 +45,7 @@ public class TestDialogFragment extends DialogFragment {
       Bundle savedInstanceState) {
     Log.e("dialog", "onCreateView");
     View view = inflater.inflate(R.layout.fragment_test_dialog, container, false);
-    ButterKnife.bind(this,view);
+    ButterKnife.bind(this, view);
     return view;
   }
 
@@ -50,13 +53,12 @@ public class TestDialogFragment extends DialogFragment {
     super.onViewCreated(view, savedInstanceState);
     Log.e("dialog", "onViewCreated");
 
-    //Button etTextText = (Button) view.findViewById(R.id.bTest);
-    //etTextText.setOnClickListener(new View.OnClickListener() {
-    //  @Override
-    //  public void onClick(View v) {
-    //    Toast.makeText(getActivity(), "ButtonClicked", Toast.LENGTH_SHORT).show();
-    //  }
-    //});
+    Button etTextText = (Button) view.findViewById(R.id.bTest);
+    etTextText.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        listener.doAction();
+      }
+    });
   }
 
   @Override public void onStart() {
@@ -92,5 +94,12 @@ public class TestDialogFragment extends DialogFragment {
   @Override public void onDetach() {
     super.onDetach();
     Log.e("dialog", "onDetach");
+  }
+
+  public void setOnSomeItemClickListener(CustomListener listener) {
+    this.listener = listener;
+  }
+  public void removeListeners(){
+    this.listener = null;
   }
 }

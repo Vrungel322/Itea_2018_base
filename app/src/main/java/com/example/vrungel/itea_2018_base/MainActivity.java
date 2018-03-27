@@ -1,16 +1,12 @@
 package com.example.vrungel.itea_2018_base;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Toast;
 import butterknife.BindView;
 import com.example.vrungel.itea_2018_base.base.BaseActivity;
-import com.example.vrungel.itea_2018_base.utils.ItemClickSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,45 +18,47 @@ public class MainActivity extends BaseActivity {
 
   private CustomAdapter mAdapter;
   private CustomRVAdapter mCustomRVAdapter;
+  private int finalCounter;
+  private TestDialogFragment mTestDialogFragment;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_main);
     super.onCreate(savedInstanceState);
-    mCustomRVAdapter = new CustomRVAdapter();
-    mRecyclerView.setLayoutManager(
-        new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+    //mCustomRVAdapter = new CustomRVAdapter();
+    //mRecyclerView.setLayoutManager(
+    //    new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
     //mRecyclerView.setLayoutManager(
     //    new GridLayoutManager(getApplicationContext(),3));
-    mRecyclerView.setAdapter(mCustomRVAdapter);
+    //mRecyclerView.setAdapter(mCustomRVAdapter);
 
-    mCustomRVAdapter.setCountries(mDataManager.fetchMocks());
+    //mCustomRVAdapter.setCountries(mDataManager.fetchMocks());
 
-    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-      @Override public void onRefresh() {
-        Toast.makeText(MainActivity.this, "onRefresh", Toast.LENGTH_SHORT).show();
-        mSwipeRefreshLayout.setRefreshing(false);
-      }
-    });
-
-    ItemClickSupport.addTo(mRecyclerView)
-        .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-          @Override public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-            Toast.makeText(MainActivity.this, "onItemClicked " + position, Toast.LENGTH_SHORT)
-                .show();
-
-
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            TestDialogFragment.newInstance(null).show(ft, "TestDialogFragment");
-          }
-        });
-
-    getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE).edit()
-        .putString("t", "temp")
-        .apply();
-
-    getPreferences(Context.MODE_PRIVATE).edit()
-        .putString("t", "temp")
-        .apply();
+    //mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+    //  @Override public void onRefresh() {
+    //    Toast.makeText(MainActivity.this, "onRefresh", Toast.LENGTH_SHORT).show();
+    //    mSwipeRefreshLayout.setRefreshing(false);
+    //  }
+    //});
+    //
+    //ItemClickSupport.addTo(mRecyclerView)
+    //    .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+    //      @Override public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+    //        Toast.makeText(MainActivity.this, "onItemClicked " + position, Toast.LENGTH_SHORT)
+    //            .show();
+    //
+    //
+    //        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    //        TestDialogFragment.newInstance(null).show(ft, "TestDialogFragment");
+    //      }
+    //    });
+    //
+    //getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE).edit()
+    //    .putString("t", "temp")
+    //    .apply();
+    //
+    //getPreferences(Context.MODE_PRIVATE).edit()
+    //    .putString("t", "temp")
+    //    .apply();
 
     //mCountries = mDataManager.fetchMocks();
     //mAdapter = new CustomAdapter(getApplicationContext(), R.layout.item_layout_custom, mCountries);
@@ -111,6 +109,47 @@ public class MainActivity extends BaseActivity {
     //
     //  }
     //});
+
+    //Runnable action = new Runnable() {
+    //  @Override public void run() {
+    //
+    //  }
+    //};
+    //mRecyclerView.post(action);
+    ////mRecyclerView.removeCallbacks(action);
+    //
+    //Runnable runnable = new Runnable() {
+    //  @Override public void run() {
+    //    while (finalCounter <= 10) {
+    //      //runOnUiThread(new Runnable() {
+    //      //  @Override public void run() {
+    //      //    tv.setText("" + finalCounter++);
+    //      //  }
+    //      //});
+    //      try {
+    //        Thread.sleep(500);
+    //      } catch (InterruptedException e) {
+    //        e.printStackTrace();
+    //      }
+    //    }
+    //  }
+    //};
+    //Thread thread = new Thread(runnable);
+    //thread.start();
+
+    mTestDialogFragment = TestDialogFragment.newInstance(null);
+    mTestDialogFragment.setOnSomeItemClickListener(new CustomListener() {
+      @Override public void doAction() {
+        Toast.makeText(getApplicationContext(), "ButtonClicked", Toast.LENGTH_SHORT).show();
+      }
+    });
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    mTestDialogFragment.show(ft, "TestDialogFragment");
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mTestDialogFragment.removeListeners();
   }
 
   //@OnClick(R.id.b1)
