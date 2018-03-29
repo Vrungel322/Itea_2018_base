@@ -1,9 +1,10 @@
 package com.example.vrungel.itea_2018_base;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 import butterknife.BindView;
 import com.example.vrungel.itea_2018_base.base.BaseActivity;
@@ -137,19 +138,48 @@ public class MainActivity extends BaseActivity {
     //Thread thread = new Thread(runnable);
     //thread.start();
 
-    mTestDialogFragment = TestDialogFragment.newInstance(null);
-    mTestDialogFragment.setOnSomeItemClickListener(new CustomListener() {
-      @Override public void doAction() {
-        Toast.makeText(getApplicationContext(), "ButtonClicked", Toast.LENGTH_SHORT).show();
-      }
-    });
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    mTestDialogFragment.show(ft, "TestDialogFragment");
+    //mTestDialogFragment = TestDialogFragment.newInstance(null);
+    //mTestDialogFragment.setOnSomeItemClickListener(new CustomListener() {
+    //  @Override public void doAction() {
+    //    Toast.makeText(getApplicationContext(), "ButtonClicked", Toast.LENGTH_SHORT).show();
+    //  }
+    //});
+    //FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    //mTestDialogFragment.show(ft, "TestDialogFragment");
+
+    MyAsyncTask myAsyncTask = new MyAsyncTask();
+    myAsyncTask.execute("Stroka0");
+  }
+
+  class MyAsyncTask extends AsyncTask<String, String, String> {
+    @Override protected void onPreExecute() {
+      super.onPreExecute();
+      Log.wtf("MyAsyncTask", "onPreExecute");
+    }
+
+    @Override protected String doInBackground(String... strings) {
+      Log.wtf("MyAsyncTask", "doInBackground " + strings[0]);
+      publishProgress("\nStroka1", "\nStroka2");
+      return "Result String";
+    }
+
+    @Override protected void onProgressUpdate(String... values) {
+      super.onProgressUpdate(values);
+      Toast.makeText(getApplicationContext(), "onProgressUpdate " + values[0] + values[1],
+          Toast.LENGTH_SHORT).show();
+      Log.wtf("MyAsyncTask", "onProgressUpdate " + values[0] + values[1]);
+    }
+
+    @Override protected void onPostExecute(String result) {
+      super.onPostExecute(result);
+      Toast.makeText(getApplicationContext(), "onPostExecute " + result, Toast.LENGTH_SHORT).show();
+      Log.wtf("MyAsyncTask", "onPostExecute " + result);
+    }
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    mTestDialogFragment.removeListeners();
+    //mTestDialogFragment.removeListeners();
   }
 
   //@OnClick(R.id.b1)
