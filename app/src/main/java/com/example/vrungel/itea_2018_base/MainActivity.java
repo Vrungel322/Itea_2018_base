@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 import butterknife.BindView;
 import com.example.vrungel.itea_2018_base.base.BaseActivity;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class MainActivity extends BaseActivity {
   private CustomRVAdapter mCustomRVAdapter;
   private int finalCounter;
   private TestDialogFragment mTestDialogFragment;
+  private MyAsyncTask mMyAsyncTask;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_main);
@@ -147,11 +149,34 @@ public class MainActivity extends BaseActivity {
     //FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
     //mTestDialogFragment.show(ft, "TestDialogFragment");
 
-    MyAsyncTask myAsyncTask = new MyAsyncTask();
-    myAsyncTask.execute("Stroka0");
+    mMyAsyncTask = (MyAsyncTask) getLastCustomNonConfigurationInstance();
+    if (mMyAsyncTask == null) {
+      mMyAsyncTask = new MyAsyncTask();
+      mMyAsyncTask.execute("Stroka0");
+    }
+    // передаем в MyTask ссылку на текущее MainActivity
+    mMyAsyncTask.link(this);
   }
 
-  class MyAsyncTask extends AsyncTask<String, String, String> {
+  public Object onRetainCustomNonConfigurationInstance() {
+    // удаляем из MyTask ссылку на старое MainActivity
+    mMyAsyncTask.unLink();
+    return mMyAsyncTask;
+  }
+
+  static class MyAsyncTask extends AsyncTask<String, String, String> {
+    WeakReference<MainActivity> activity;
+
+    // получаем ссылку на MainActivity
+    void link(MainActivity act) {
+      activity =  new WeakReference<>(act);
+    }
+
+    // обнуляем ссылку
+    void unLink() {
+      activity.clear();
+    }
+
     @Override protected void onPreExecute() {
       super.onPreExecute();
       Log.wtf("MyAsyncTask", "onPreExecute");
@@ -165,14 +190,15 @@ public class MainActivity extends BaseActivity {
 
     @Override protected void onProgressUpdate(String... values) {
       super.onProgressUpdate(values);
-      Toast.makeText(getApplicationContext(), "onProgressUpdate " + values[0] + values[1],
+      Toast.makeText(activity.get().getApplicationContext(), "onProgressUpdate " + values[0] + values[1],
           Toast.LENGTH_SHORT).show();
       Log.wtf("MyAsyncTask", "onProgressUpdate " + values[0] + values[1]);
     }
 
     @Override protected void onPostExecute(String result) {
       super.onPostExecute(result);
-      Toast.makeText(getApplicationContext(), "onPostExecute " + result, Toast.LENGTH_SHORT).show();
+      Toast.makeText(activity.get().getApplicationContext(), "onPostExecute " + result,
+          Toast.LENGTH_SHORT).show();
       Log.wtf("MyAsyncTask", "onPostExecute " + result);
     }
   }
