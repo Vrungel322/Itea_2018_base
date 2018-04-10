@@ -11,10 +11,9 @@ import com.example.vrungel.itea_2018_base.data.DataManager;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
-   protected DataManager mDataManager;
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ButterKnife.bind(this);
-    mDataManager = new DataManager();
   }
 }

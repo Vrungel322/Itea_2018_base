@@ -1,4 +1,4 @@
-package com.example.vrungel.itea_2018_base;
+package com.example.vrungel.itea_2018_base.main;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.example.vrungel.itea_2018_base.Country;
+import com.example.vrungel.itea_2018_base.R;
 import java.util.ArrayList;
 import java.util.List;
 
