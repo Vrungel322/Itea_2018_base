@@ -1,5 +1,6 @@
 package com.example.vrungel.itea_2018_base.main;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import com.example.vrungel.itea_2018_base.Country;
 import com.example.vrungel.itea_2018_base.CustomAdapter;
+import com.example.vrungel.itea_2018_base.KotlinActivity;
 import com.example.vrungel.itea_2018_base.MyCustomEvent;
 import com.example.vrungel.itea_2018_base.R;
 import com.example.vrungel.itea_2018_base.TestDialogFragment;
@@ -52,6 +54,7 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
     mPresenter = new MainActivityPresenter();
     bus.register(this);
     bus.post(new MyCustomEvent());
+    startActivity(new Intent(this, KotlinActivity.class));
 
     //mPresenter.bind(new IMainActivityView() {
     //  @Override public void showMocks(List<Country> countries) {
