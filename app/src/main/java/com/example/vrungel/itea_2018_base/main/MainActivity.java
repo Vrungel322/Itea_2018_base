@@ -12,10 +12,13 @@ import android.widget.Toast;
 import butterknife.BindView;
 import com.example.vrungel.itea_2018_base.Country;
 import com.example.vrungel.itea_2018_base.CustomAdapter;
+import com.example.vrungel.itea_2018_base.MyCustomEvent;
 import com.example.vrungel.itea_2018_base.R;
 import com.example.vrungel.itea_2018_base.TestDialogFragment;
 import com.example.vrungel.itea_2018_base.base.BaseActivity;
 import com.example.vrungel.itea_2018_base.utils.ItemClickSupport;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,17 +29,29 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
   @BindView(R.id.srl) SwipeRefreshLayout mSwipeRefreshLayout;
   private List<Country> mCountries = new ArrayList<>();
   private MainActivityPresenter mPresenter;
+  private IMainActivityView mIMainActivityView = new IMainActivityView() {
+    @Override public void showMocks(List<Country> countries) {
+
+    }
+
+    @Override public void showText(String string) {
+
+    }
+  };
 
   private CustomAdapter mAdapter;
   private CustomRVAdapter mCustomRVAdapter;
   private int finalCounter;
   private TestDialogFragment mTestDialogFragment;
   private MyAsyncTask mMyAsyncTask;
+  private Bus bus = new Bus();
 
   @Override public void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_main);
     super.onCreate(savedInstanceState);
     mPresenter = new MainActivityPresenter();
+    bus.register(this);
+    bus.post(new MyCustomEvent());
 
     //mPresenter.bind(new IMainActivityView() {
     //  @Override public void showMocks(List<Country> countries) {
@@ -45,7 +60,7 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
     //});
 
     mPresenter.bind(this);
-
+    //mPresenter.bind(mIMainActivityView);
     mCustomRVAdapter = new CustomRVAdapter();
     mRecyclerView.setLayoutManager(
         new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
@@ -79,6 +94,11 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
     }
     // передаем в MyTask ссылку на текущее MainActivity
     mMyAsyncTask.link(this);
+  }
+
+  @Subscribe
+  public void onEvent(MyCustomEvent s) {
+    Log.wtf("MainActivity", String.valueOf(s.hashCode()));
   }
 
   public Object onRetainCustomNonConfigurationInstance() {
@@ -138,6 +158,7 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
   @Override protected void onDestroy() {
     super.onDestroy();
     mPresenter.unBind();
+    bus.unregister(this);
     //mTestDialogFragment.removeListeners();
   }
 
