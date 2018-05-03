@@ -17,4 +17,14 @@ public class DataManager {
   public List<Country> fetchMocks() {
     return mRepositoryMockCountries.fetchMocks();
   }
+
+  //public void send(List<Country> countries) {
+  //  List<CountryServerEntity> serverEntities = new ArrayList<CountryServerEntity>();
+  //  for (Country c : countries) {
+  //    serverEntities.add(
+  //        new MapperCountryToCountryServerEntity("userId").transform(c)
+  //    );
+  //  }
+  //  restApi.send(serverEntities);
+  //}
 }

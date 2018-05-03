@@ -1,5 +1,7 @@
 package com.example.vrungel.itea_2018_base.base;
 
-public interface IView {
+import com.arellomobile.mvp.MvpView;
+
+public interface IView extends MvpView {
   void showText(String string);
 }

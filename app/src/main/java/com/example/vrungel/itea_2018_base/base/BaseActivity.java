@@ -2,15 +2,14 @@ package com.example.vrungel.itea_2018_base.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import butterknife.ButterKnife;
-import com.example.vrungel.itea_2018_base.data.DataManager;
+import com.arellomobile.mvp.MvpAppCompatActivity;
 
 /**
  * Created by vrungel on 08.03.2018.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends MvpAppCompatActivity {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

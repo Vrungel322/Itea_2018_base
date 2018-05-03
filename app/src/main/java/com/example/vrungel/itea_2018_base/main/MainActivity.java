@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import butterknife.BindView;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.vrungel.itea_2018_base.Country;
 import com.example.vrungel.itea_2018_base.CustomAdapter;
 import com.example.vrungel.itea_2018_base.KotlinActivity;
@@ -30,7 +32,7 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
   @BindView(R.id.rv) RecyclerView mRecyclerView;
   @BindView(R.id.srl) SwipeRefreshLayout mSwipeRefreshLayout;
   private List<Country> mCountries = new ArrayList<>();
-  private MainActivityPresenter mPresenter;
+  @InjectPresenter MainActivityPresenter mPresenter;
   private IMainActivityView mIMainActivityView = new IMainActivityView() {
     @Override public void showMocks(List<Country> countries) {
 
@@ -48,10 +50,14 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
   private MyAsyncTask mMyAsyncTask;
   private Bus bus = new Bus();
 
+  @ProvidePresenter
+   public MainActivityPresenter createPresenter(){
+     return new MainActivityPresenter("1");
+   }
+
   @Override public void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_main);
     super.onCreate(savedInstanceState);
-    mPresenter = new MainActivityPresenter();
     bus.register(this);
     bus.post(new MyCustomEvent());
     startActivity(new Intent(this, KotlinActivity.class));
@@ -62,7 +68,7 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
     //  }
     //});
 
-    mPresenter.bind(this);
+    //mPresenter.bind(this);
     //mPresenter.bind(mIMainActivityView);
     mCustomRVAdapter = new CustomRVAdapter();
     mRecyclerView.setLayoutManager(
@@ -77,7 +83,6 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
       }
     });
 
-    mPresenter.fetchMocks();
 
     ItemClickSupport.addTo(mRecyclerView)
         .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -99,8 +104,7 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
     mMyAsyncTask.link(this);
   }
 
-  @Subscribe
-  public void onEvent(MyCustomEvent s) {
+  @Subscribe public void onEvent(MyCustomEvent s) {
     Log.wtf("MainActivity", String.valueOf(s.hashCode()));
   }
 
@@ -160,7 +164,7 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    mPresenter.unBind();
+    //mPresenter.unBind();
     bus.unregister(this);
     //mTestDialogFragment.removeListeners();
   }
